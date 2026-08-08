@@ -24,17 +24,26 @@ public class ExpenseTrackerApiApplication {
 //		↓
 //				SpringApplication.run()
 //		↓
-//				Starts Server
+//				SpringBoot Starts
 //		↓
-//				Loads Spring
+//				Read Dependencies
 //		↓
-//				Reads Configuration
+//				Initialize Spring
 //		↓
-//				Creates Objects
+//				Initialize JPA
 //		↓
-//				Starts Tomcat
+//				JPA searches for "Where is Database?"
 //		↓
-//				Waits Forever
+//				prepares Database infrastructure
+// 		↓
+//				Starts Web-Server Tomcat
+//		↓
+//				Application Keep Running / Port 8080
+// 		↓
+//				Wait for HTTP Requests
+
+
+
 
 //		Boots Spring, starts the embedded Tomcat server, and keeps the application running
 		SpringApplication.run(
