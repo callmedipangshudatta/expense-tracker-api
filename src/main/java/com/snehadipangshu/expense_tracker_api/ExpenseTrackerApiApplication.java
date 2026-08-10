@@ -24,23 +24,39 @@ import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfigur
 
 @SpringBootApplication(
 
-//		@SpringBootApplication
-//        ↓
-//		@EnableAutoConfiguration
-//        ↓
-//		"Configure what you need,
-//		BUT exclude DataSource + Hibernate JPA."
-//		↓
-//		Web infrastructure can start
-//        ↓
-//		Tomcat
-//        ↓
-//		Controller
-
 		exclude = {
+				//DataSource :- object that manages connection between Application and Database
 				DataSourceAutoConfiguration.class,
+				//Hibernate JPA :- Hibernate Java Persistence API is our Bilingual Translator
+				//JPA :- sets the translation rules
+				//Hibernate :- translates Java to MySQL and vice-versa
 				HibernateJpaAutoConfiguration.class
+
+				// Why .class at end?
+
+				// "Look at the blueprint for the Address Book (DataSource...class) and
+				// the blueprint for the Translator (Hibernate...class).
+				// where our exclude command tells
+				// 'I forbid you from hiring for these roles or building these right now.
+				// Just start the web server!' ".
 		}
+
+				//		Architecture :-
+
+				//		@SpringBootApplication
+				//        ↓
+				//		@EnableAutoConfiguration
+				//        ↓
+				//		"Configure what you need,
+				//		BUT exclude DataSource + Hibernate JPA."
+				//		↓
+				//		Web infrastructure can start
+				//        ↓
+				//		Tomcat
+				//        ↓
+				//		Controller
+
+
 )
 public class ExpenseTrackerApiApplication {
 
@@ -67,7 +83,7 @@ public class ExpenseTrackerApiApplication {
 	// Waits for HTTP requests
 
 	// Temporary :-
-	// Database/JPA auto-configuration is currently excluded.
+	// Database/JPA autoconfiguration is currently excluded.
 	// We will configure MySQL + JPA properly later.
 
 

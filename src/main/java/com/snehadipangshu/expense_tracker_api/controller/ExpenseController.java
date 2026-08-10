@@ -27,10 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 //  Level 1. Identify the Controller
 //  Mentioning @RestController tells to Spring this Java class
 //  can handle HTTP Requests and send HTTP Response
-//  but without any request until we put something like
-//  @GetMapping or @PostMapping
-@RestController
+//  but without any request, until we put something like
+//  @GetMapping or @PostMapping annotations respectively
 
+@RestController
 public class ExpenseController{
 
     //  tells Spring:
@@ -40,7 +40,8 @@ public class ExpenseController{
     //  Level 2. Give specific requests
     //  When a GET request comes to /expenses,
     //  Spring execute this method
-    @GetMapping("/expenses")
+
+    @GetMapping("/expenses") // GET /expenses
     public String getExpenses(){
         return "Here are the expenses";
     }
