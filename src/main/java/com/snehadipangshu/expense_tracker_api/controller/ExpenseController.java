@@ -1,8 +1,8 @@
 package com.snehadipangshu.expense_tracker_api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 //  Spring Boot starts
 //       ↓
@@ -15,6 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 //  Sees @RestController
 //       ↓
 //  "Okay, this class handles HTTP requests."
+
+//  @RestController
+//     ↓
+//  This class is a REST controller.
+//     ↓
+//  Spring registers it as a component that can handle web requests.
+//     ↓
+//  @GetMapping / @PostMapping / etc.
+//     ↓
+//  Define WHICH requests map to WHICH methods.
+
+
+
 
 //  @RestController is an annotation
 //  : extra information we attach to a class/method
@@ -46,4 +59,5 @@ public class ExpenseController{
         return "Here are the expenses";
     }
 }
+
 
