@@ -25,11 +25,14 @@ import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfigur
 @SpringBootApplication(
 
 		exclude = {
-				//DataSource :- object that manages connection between Application and Database
+				//  DataSource :- object that manages connection between Application and Database
 				DataSourceAutoConfiguration.class,
-				//Hibernate JPA :- Hibernate Java Persistence API is our Bilingual Translator
-				//JPA :- sets the translation rules
-				//Hibernate :- translates Java to MySQL and vice-versa
+
+                //  Hibernate JPA :- Hibernate Java Persistence API is our Bilingual Translator
+                //  JPA :- sets or defines the rules/interfaces for persisting Java Objects
+
+                //  Hibernate :- an implementation of JPA
+                //  Hibernate does the ORM work between Java objects and the database
 				HibernateJpaAutoConfiguration.class
 
 				// Why .class at end?
