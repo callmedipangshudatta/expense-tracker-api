@@ -55,8 +55,8 @@ Spring identifies the controller method mapped to:
 
 ```java
 @PostMapping("/expenses")
-public Expense addExpense(...) {
-    ...
+public Expense addExpense(@RequestBody Expense expense) {
+    return expense;
 }
 ```
 
