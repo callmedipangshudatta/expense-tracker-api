@@ -1,8 +1,6 @@
 package com.snehadipangshu.expense_tracker_api.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 //  Spring Boot starts
 //       ↓
 //  @SpringBootApplication
@@ -63,6 +61,13 @@ public class ExpenseController{
     @GetMapping("/expenses/{id}")
     public String getExpense(@PathVariable String id){
         return "Here are the expenses " + id;
+    }
+
+    //  PostMapping :- When a POST request comes to /expenses,
+    //  execute this method.
+    @PostMapping("/expenses")
+    public String addExpense(@RequestBody String expense){
+        return expense;
     }
 }
 
