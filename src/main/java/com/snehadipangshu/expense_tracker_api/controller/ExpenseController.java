@@ -2,7 +2,7 @@ package com.snehadipangshu.expense_tracker_api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.PathVariable;
 //  Spring Boot starts
 //       ↓
 //  @SpringBootApplication
@@ -56,6 +56,13 @@ public class ExpenseController{
     @GetMapping("/expenses") // GET /expenses
     public String getExpenses(){
         return "Here are the expenses";
+    }
+
+    //  @PathVariable :- Take the value from {id} in the URL
+    //  and give it to out Java Method as the id variable
+    @GetMapping("/expenses/{id}")
+    public String getExpense(@PathVariable String id){
+        return "Here are the expenses " + id;
     }
 }
 
