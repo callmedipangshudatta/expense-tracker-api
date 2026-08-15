@@ -5,13 +5,14 @@ import org.springframework.web.bind.annotation.*;
 //       ↓
 //  @SpringBootApplication
 //       ↓
-//  Spring scans application
+//  Spring scans application through @ComponentScan of @SpringBootApplication
 //       ↓
-//  Finds ExpenseController
+//  Finds ExpenseController.java file
 //       ↓
-//  Sees @RestController
+//  Sees @RestController //annotation for Controller
 //       ↓
-//  "Okay, this class handles HTTP requests."
+//  "Okay, this class handles HTTP both requests and responses."
+
 
 //  @RestController
 //     ↓
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 //  @RestController is an annotation
+
+//  Annotation means ?
 //  : extra information we attach to a class/method
 //  so that a framework can understand how to treat it
 
