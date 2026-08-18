@@ -23,3 +23,27 @@ Questions that came up while building this project, along with my understanding 
 ### 2. It listens for incoming HTTP traffic on a port, such as port 8080 on your computer.
 
 ### 3. It receives HTTP requests and passes them to the Java application, and then sends the application's response back as an HTTP response.
+
+## Q3. What is Controller?
+
+### A controller is simply a Java class that receives request from the outside world.
+
+### We had a simple Java Class :
+
+```java
+public class ExpenseController {
+
+}
+```
+### SpringBoot can make this simple Java Class into Controller when we write :
+
+```java
+@RestController
+public class ExpenseController {
+
+}
+```
+
+
+> ExpenseController : the class that handles expense-related requests.
+

@@ -1,5 +1,8 @@
 package com.snehadipangshu.expense_tracker_api.controller;
 
+//import means : primarily a Java compiler convenience
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //  Spring Boot starts
 //       ↓
@@ -44,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 //  @GetMapping or @PostMapping annotations respectively
 
 @RestController
+@RequestMapping("/expenses")
 public class ExpenseController{
 
     //  tells Spring:
@@ -54,24 +58,44 @@ public class ExpenseController{
     //  When a GET request comes to /expenses,
     //  Spring execute this method
 
-    @GetMapping("/expenses") // GET /expenses
-    public String getExpenses(){
-        return "Here are the expenses";
+    @GetMapping
+    public ResponseEntity<String> getExpenses(){
+        //  HttpStatus.OK = 200
+        return new ResponseEntity<>("Here are all the expenses",HttpStatus.OK);
     }
 
+    //  2. GET BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getExpense(@PathVariable String id){
+        //  In the future, if the ID isn't found, you would return HttpStatus.NOT_FOUND (404)
+        return new ResponseEntity<>("Here is expense: " + id,HttpStatus.OK);
+    }
+
+    // 3. CREATE
     //  @PathVariable :- Take the value from {id} in the URL
     //  and give it to out Java Method as the id variable
-    @GetMapping("/expenses/{id}")
-    public String getExpense(@PathVariable String id){
-        return "Here are the expenses " + id;
+    @PostMapping
+    public ResponseEntity<String> addExpense(@RequestBody String expense){
+        // When creating a resource, it is best practice to return 201 created
+        return new ResponseEntity<>("Create expense: "+expense, HttpStatus.CREATED);
     }
 
-    //  PostMapping :- When a POST request comes to /expenses,
-    //  execute this method.
-    @PostMapping("/expenses")
-    public String addExpense(@RequestBody String expense){
-        return expense;
+    // 4. UPDATE
+    // @PutMapping is used for updating an existing resource
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateExpense(@PathVariable String id,@RequestBody String updatedExpense){
+        return new ResponseEntity<>("Update expense: " + id + " with data: "+updatedExpense,HttpStatus.OK);
     }
+
+    // 5. DELETE
+    // @DeleteMapping handles removal
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteExpense(@PathVariable String id){
+        // HttpStatus.NO_CONTENT (204) is standard for successful deletion
+        // when we have no body to return back to the client
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
 
 
