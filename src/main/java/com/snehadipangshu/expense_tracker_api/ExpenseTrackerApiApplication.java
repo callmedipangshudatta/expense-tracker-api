@@ -3,12 +3,13 @@
 package com.snehadipangshu.expense_tracker_api;
 
 import org.springframework.boot.SpringApplication;
+//	It sets up default configuration of our app or web
+//	It starts the Spring Application context(the container hold all our applications object/beans)
+//	If we are building our web application, it automatically starts an embedded server, so that our app can listen for request immediately
+
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// additionally including imports for hibernating our JPA request error
-
-import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
-import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 
 // @SpringBootApplication is just like a teacher who approves a student assignment
 // Student is Java Class {ExpenseTrackerApiApplication}
@@ -22,45 +23,24 @@ import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfigur
 //
 //"Aha! This is the main Spring Boot application."
 
-@SpringBootApplication(
 
-		exclude = {
-				//  DataSource :- object that manages connection between Application and Database
-				DataSourceAutoConfiguration.class,
+//		Architecture :-
 
-                //  Hibernate JPA :- Hibernate Java Persistence API is our Bilingual Translator
-                //  JPA :- sets or defines the rules/interfaces for persisting Java Objects
+//		@SpringBootApplication
+//        ↓
+//		@EnableAutoConfiguration
+//        ↓
+//		"Configure what you need,
+//		BUT exclude DataSource + Hibernate JPA."
+//		↓
+//		Web infrastructure can start
+//        ↓
+//		Tomcat
+//        ↓
+//		Controller
 
-                //  Hibernate :- an implementation of JPA
-                //  Hibernate does the ORM work between Java objects and the database
-				HibernateJpaAutoConfiguration.class
+@SpringBootApplication
 
-				// Why .class at end?
-
-				// "Look at the blueprint for the Address Book (DataSource...class) and
-				// the blueprint for the Translator (Hibernate...class).
-				// where our exclude command tells
-				// 'I forbid you from hiring for these roles or building these right now.
-				// Just start the web server!' ".
-		}
-
-				//		Architecture :-
-
-				//		@SpringBootApplication
-				//        ↓
-				//		@EnableAutoConfiguration
-				//        ↓
-				//		"Configure what you need,
-				//		BUT exclude DataSource + Hibernate JPA."
-				//		↓
-				//		Web infrastructure can start
-				//        ↓
-				//		Tomcat
-				//        ↓
-				//		Controller
-
-
-)
 public class ExpenseTrackerApiApplication {
 
 	public static void main(String[] args) {

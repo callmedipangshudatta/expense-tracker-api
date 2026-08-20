@@ -47,6 +47,8 @@ import org.springframework.web.bind.annotation.*;
 //  @GetMapping or @PostMapping annotations respectively
 
 @RestController
+
+//  Class - Level Routing
 @RequestMapping("/expenses")
 public class ExpenseController{
 
