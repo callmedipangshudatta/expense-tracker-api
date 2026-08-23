@@ -1,6 +1,7 @@
 package com.snehadipangshu.expense_tracker_api.controller;
 
 //import means : primarily a Java compiler convenience
+import com.snehadipangshu.expense_tracker_api.entity.Expense;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,9 +78,14 @@ public class ExpenseController{
     //  @PathVariable :- Take the value from {id} in the URL
     //  and give it to out Java Method as the id variable
     @PostMapping
-    public ResponseEntity<String> addExpense(@RequestBody String expense){
+    // Notice we are now returning an 'Expense' object, not a 'String'!
+    public ResponseEntity<Expense> addExpense(@RequestBody Expense expense){
         // When creating a resource, it is best practice to return 201 created
-        return new ResponseEntity<>("Create expense: "+expense, HttpStatus.CREATED);
+
+        //Before Expense.java :- "Create expense: "+expense, HttpStatus.CREATED
+        //After Expense.java :- "expense", HttpStatus.CREATED
+
+        return new ResponseEntity<>(expense, HttpStatus.CREATED);
     }
 
     // 4. UPDATE
