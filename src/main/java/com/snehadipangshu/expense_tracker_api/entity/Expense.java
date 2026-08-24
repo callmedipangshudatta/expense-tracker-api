@@ -1,7 +1,6 @@
 //  com.snehadipangshu :- WHO/Personal Identifier
 //  expense_tracker_api :- Root Folder of this Project
 //  entity :- Role
-
 package com.snehadipangshu.expense_tracker_api.entity;
 
 import jakarta.persistence.*;
@@ -19,8 +18,11 @@ public class Expense {
 
     //  @Id marks this field as the Primary Key (the unique identifier)
     //  It designates this specific column as the Primary Key.
+    //  "id" is our Primary Key
     @Id
 
+    //  @GeneratedValue means "Generate a Value" but automatically without user even typing it
+    //  strategy is Java asking us "Which method do we want to use to create this number?"
     //  @GeneratedValue tells PostgreSQL to auto-increment this ID for us (1,2,3..)
     //  IDENTITY : tells the database to handle the counting automatically
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +39,19 @@ public class Expense {
 
     private  String category;
 
-    //Automatically records when the expense was created
+    //  Automatically records when the expense was created
+    //  Java Variable : createdAt uses 'camelCase'
+    //  SQL Variable : created_at uses 'snake_case'
+    //  This maps the Java Variable to the correct dB column name
+
+    //  name = "created_at" :
+    //  "we are explicitly mentioning the name for our dB column"
+
+    //  updatable = false :
+    //  "it means once the row is
+    //  created, lock this column.Even if our own Java code
+    //  accidentally tries to change the creation date later,
+    //  block the update."
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
