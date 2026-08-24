@@ -1,24 +1,28 @@
+//  com.snehadipangshu :- WHO/Personal Identifier
+//  expense_tracker_api :- Root Folder of this Project
+//  entity :- Role
+
 package com.snehadipangshu.expense_tracker_api.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-//@Entity tells Hibernate: "Make a database table out of this class"
-//@Entity tells marks the class as a persistent Java object -> Creates a Table
+//  @Entity :- We put this above our class to tell Java,
+//  "Create a database table for this."
 @Entity
 
-//@Table is optional, but it's good practice to explicitly name our table
+//  @Table is optional, but it's good practice to explicitly name our table
 @Table(name = "expenses")
 
-//entity : it only cares about how data object looks like and how it maps to PostgreSQL table
 public class Expense {
 
-    //@Id marks this field as the Primary Key (the unique identifier)
-    //Identifies the unique field for each object
+    //  @Id marks this field as the Primary Key (the unique identifier)
+    //  It designates this specific column as the Primary Key.
     @Id
 
-    //@GeneratedValue tells PostgreSQL to auto-increment this ID for us (1,2,3..)
+    //  @GeneratedValue tells PostgreSQL to auto-increment this ID for us (1,2,3..)
+    //  IDENTITY : tells the database to handle the counting automatically
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
