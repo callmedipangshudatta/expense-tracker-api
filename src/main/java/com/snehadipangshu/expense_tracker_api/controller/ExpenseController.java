@@ -2,9 +2,14 @@ package com.snehadipangshu.expense_tracker_api.controller;
 
 //import means : primarily a Java compiler convenience
 import com.snehadipangshu.expense_tracker_api.entity.Expense;
+import com.snehadipangshu.expense_tracker_api.service.ExpenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
 //  Spring Boot starts
 //       ↓
 //  @SpringBootApplication
@@ -53,6 +58,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/expenses")
 public class ExpenseController{
 
+    // --- NEW: Bring in the Service layer to talk to the database ---
+    private final ExpenseService expenseService;
+
+    //Constructor Injection
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
+    }
+
     //  tells Spring:
     //  "For a GET request to /expenses, use this method."
     //  Method : @GetMapping("/expenses")
@@ -62,16 +75,23 @@ public class ExpenseController{
     //  Spring execute this method
 
     @GetMapping
-    public ResponseEntity<String> getExpenses(){
+    public ResponseEntity<List<Expense>> getExpenses(){
         //  HttpStatus.OK = 200
-        return new ResponseEntity<>("Here are all the expenses",HttpStatus.OK);
+        List<Expense> allExpenses = expenseService.getAllExpenses();
+        return new ResponseEntity<>(allExpenses,HttpStatus.OK);
     }
 
     //  2. GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<String> getExpense(@PathVariable String id){
-        //  In the future, if the ID isn't found, you would return HttpStatus.NOT_FOUND (404)
-        return new ResponseEntity<>("Here is expense: " + id,HttpStatus.OK);
+    public ResponseEntity<Expense> getExpense(@PathVariable Long id){
+
+        Optional<Expense> expense = expenseService.getExpenseById(id);
+
+        if(expense.isPresent()){
+            return new ResponseEntity<>(expense.get(),HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // 3. CREATE
@@ -82,25 +102,36 @@ public class ExpenseController{
     public ResponseEntity<Expense> addExpense(@RequestBody Expense expense){
         // When creating a resource, it is best practice to return 201 created
 
-        //Before Expense.java :- "Create expense: "+expense, HttpStatus.CREATED
-        //After Expense.java :- "expense", HttpStatus.CREATED
-
-        return new ResponseEntity<>(expense, HttpStatus.CREATED);
+        Expense savedExpense = expenseService.saveExpence(expense);
+        return new ResponseEntity<>(savedExpense,HttpStatus.CREATED);
     }
 
     // 4. UPDATE
     // @PutMapping is used for updating an existing resource
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateExpense(@PathVariable String id,@RequestBody String updatedExpense){
-        return new ResponseEntity<>("Update expense: " + id + " with data: "+updatedExpense,HttpStatus.OK);
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense){
+        Optional<Expense> existingExpense = expenseService.getExpenseById(id);
+
+        if (existingExpense.isPresent()) {
+            Expense expenseToUpdate = existingExpense.get();
+            expenseToUpdate.setDescription(updatedExpense.getDescription());
+            expenseToUpdate.setAmount(updatedExpense.getAmount());
+            expenseToUpdate.setCategory(updatedExpense.getCategory());
+
+            Expense saved = expenseService.saveExpence(expenseToUpdate);
+            return new ResponseEntity<>(saved, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // 5. DELETE
     // @DeleteMapping handles removal
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteExpense(@PathVariable String id){
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id){
         // HttpStatus.NO_CONTENT (204) is standard for successful deletion
         // when we have no body to return back to the client
+        expenseService.deleteExpense(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

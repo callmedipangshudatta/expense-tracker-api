@@ -3,27 +3,34 @@
 //  entity :- Role
 package com.snehadipangshu.expense_tracker_api.entity;
 
+//  This single line of code connects our Java application to a massive piece of machinery known as JPA(Jakarta Persistence API)
+//  ,which handles Object-Relational Mapping (ORM)
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 //  @Entity :- We put this above our class to tell Java,
+//  that this class represents a database table OR
 //  "Create a database table for this."
 @Entity
 
-//  @Table is optional, but it's good practice to explicitly name our table
+//  Allows us to specify the exact table name
 @Table(name = "expenses")
 
 public class Expense {
 
     //  @Id marks this field as the Primary Key (the unique identifier)
     //  It designates this specific column as the Primary Key.
-    //  "id" is our Primary Key
+
+    //  example : "id" is our Primary Key in our Expense Tracker
     @Id
 
-    //  @GeneratedValue means "Generate a Value" but automatically without user even typing it
-    //  strategy is Java asking us "Which method do we want to use to create this number?"
-    //  @GeneratedValue tells PostgreSQL to auto-increment this ID for us (1,2,3..)
+    //  @GeneratedValue : "Generate a Value" but automatically without user even typing it OR
+    //  it tells PostgreSQL to auto-increment this ID for us (1,2,3..)
+
+    //  strategy : is Java asking us "Which method do we want to use to create this number?"
+
     //  IDENTITY : tells the database to handle the counting automatically
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
