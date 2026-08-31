@@ -1,9 +1,13 @@
 package com.snehadipangshu.expense_tracker_api.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.snehadipangshu.expense_tracker_api.entity.Expense;
 import com.snehadipangshu.expense_tracker_api.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +24,9 @@ public class ExpenseService {
     }
 
     //GET ALL
-    public List<Expense> getAllExpenses(){
-        return expenseRepository.findAll();
+    public Page<Expense> getAllExpenses(Pageable pageable) {
+        // findAll(pageable) is a built-in Spring Data JPA magic method!
+        return expenseRepository.findAll(pageable);
     }
 
     //GET BY ID
