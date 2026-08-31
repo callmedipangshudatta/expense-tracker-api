@@ -10,6 +10,17 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
+//  What is the work of Expense. java and how its different from ExpenseDTO.java class?
+
+//  Our Expense class is tied directly to our
+//  PostgreSQL database
+//  Its only job is to match our database columns
+//  row-for-row. It holds sensitive, permanent data
+//  (like the auto-generated id and the createdAt
+//  timestamp). We never want the outside
+//  world to have direct access to the vault.
+
 //  @Entity :- We put this above our class to tell Java,
 //  that this class represents a database table OR
 //  "Create a database table for this."
