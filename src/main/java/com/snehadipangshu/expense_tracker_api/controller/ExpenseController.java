@@ -7,6 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.snehadipangshu.expense_tracker_api.dto.ExpenseDto;
+import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -74,11 +81,23 @@ public class ExpenseController{
     //  When a GET request comes to /expenses,
     //  Spring execute this method
 
+
+    //  ResponseEntity packages our response back into an official HTTP format
+    //  with status codes like 200 OK or 201 Created
+
+    //NEW : pagination
     @GetMapping
-    public ResponseEntity<List<Expense>> getExpenses(){
-        //  HttpStatus.OK = 200
-        List<Expense> allExpenses = expenseService.getAllExpenses();
-        return new ResponseEntity<>(allExpenses,HttpStatus.OK);
+    public ResponseEntity<Page<Expense>> getExpenses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        //This converts the URL number into Pageable object
+        Pageable pageable = PageRequest.of(page,size);
+
+        //Fetch the specific page of data
+        Page<Expense> allExpenses = expenseService.getAllExpenses(pageable);
+
+        return new ResponseEntity<>(allExpenses, HttpStatus.OK);
     }
 
     //  2. GET BY ID
@@ -98,9 +117,17 @@ public class ExpenseController{
     //  @PathVariable :- Take the value from {id} in the URL
     //  and give it to out Java Method as the id variable
     @PostMapping
-    // Notice we are now returning an 'Expense' object, not a 'String'!
-    public ResponseEntity<Expense> addExpense(@RequestBody Expense expense){
-        // When creating a resource, it is best practice to return 201 created
+    // NEW: We use @Valid and ExpenseDto here!
+    public ResponseEntity<Expense> addExpense(@Valid @RequestBody ExpenseDto expenseDto){
+        //  @RequestBody tells Spring to take incoming JSON text from Postman
+        //  and map it into your Java Expense object
+
+        // Manual Mapping: Transfer data from the DTO (Teller) to the Entity (Vault)
+        Expense expense = new Expense();
+        expense.setDescription(expenseDto.getDescription());
+        expense.setAmount(expenseDto.getAmount());
+        expense.setCategory(expenseDto.getCategory());
+        //  When creating a resource, it is best practice to return 201 created
 
         Expense savedExpense = expenseService.saveExpence(expense);
         return new ResponseEntity<>(savedExpense,HttpStatus.CREATED);
@@ -109,14 +136,16 @@ public class ExpenseController{
     // 4. UPDATE
     // @PutMapping is used for updating an existing resource
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense){
+    // NEW: We use @Valid and ExpenseDto here too!
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long id,@Valid @RequestBody ExpenseDto expenseDto){
         Optional<Expense> existingExpense = expenseService.getExpenseById(id);
 
         if (existingExpense.isPresent()) {
             Expense expenseToUpdate = existingExpense.get();
-            expenseToUpdate.setDescription(updatedExpense.getDescription());
-            expenseToUpdate.setAmount(updatedExpense.getAmount());
-            expenseToUpdate.setCategory(updatedExpense.getCategory());
+
+            expenseToUpdate.setDescription(expenseDto.getDescription());
+            expenseToUpdate.setAmount(expenseDto.getAmount());
+            expenseToUpdate.setCategory(expenseDto.getCategory());
 
             Expense saved = expenseService.saveExpence(expenseToUpdate);
             return new ResponseEntity<>(saved, HttpStatus.OK);
