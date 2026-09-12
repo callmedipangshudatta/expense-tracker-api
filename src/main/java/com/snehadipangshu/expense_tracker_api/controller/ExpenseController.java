@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+
 //  Spring Boot starts
 //       ↓
 //  @SpringBootApplication
@@ -39,8 +40,6 @@ import java.util.Optional;
 //  @GetMapping / @PostMapping / etc.
 //     ↓
 //  Define WHICH requests map to WHICH methods.
-
-
 
 
 //  @RestController is an annotation
