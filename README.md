@@ -444,7 +444,7 @@ Third-party libraries, AI services, datasets, and external APIs may have separat
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Dipangshu V Datta**
 
 Java · Spring Boot · Backend Development · Applied AI
 
