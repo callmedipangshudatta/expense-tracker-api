@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
 //  What is the work of Expense. java and how its different from ExpenseDTO.java class?
 
 //  Our Expense class is tied directly to our
