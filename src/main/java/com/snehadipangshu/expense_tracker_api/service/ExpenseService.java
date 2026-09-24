@@ -24,6 +24,9 @@ import java.util.Optional;
 //  Spring Boot no longer hands you the Expense directly.
 //  It hands you an Optional<Expense> (the sealed box).
 
+import java.util.Map;
+
+
 @Service
 //  @Service tells SpringBoot : "This is more like the brain of the operation.
 //  It handles the core business rules"
@@ -57,5 +60,11 @@ public class ExpenseService {
     //DELETE
     public void deleteExpense(Long id){
         expenseRepository.deleteById(id);
+    }
+
+    // NEW: Phase 11 Analytics
+    // This bridges the controller to our custom PostgreSQL query
+    public List<Map<String, Object>> getCategorySummary() {
+        return expenseRepository.getExpenseSummaryByCategory();
     }
 }

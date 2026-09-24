@@ -23,6 +23,9 @@ import java.util.List;
 //       ↓
 //  List is the Java container used to hold multiple items in a specific order.
 
+import org.springframework.data.jpa.repository.Query;
+import java.util.Map;
+
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense,Long> {
     //  public : it here means our file is accessible to rest of our application.
@@ -62,4 +65,10 @@ public interface ExpenseRepository extends JpaRepository<Expense,Long> {
     //  IgnoreCase: This tells PostgreSQL to ignore capital letters. Under the hood,
     //  it applies the LOWER() SQL function to both the database column and
     //  our keyword, ensuring they are compared fairly.
+
+    // NEW: Phase 11 Analytics Query
+    // We use @Query to write custom JPQL. Instead of pulling all records into Java,
+    // we force PostgreSQL to group the categories and calculate the sum directly.
+    @Query("SELECT e.category as category, SUM(e.amount) as total FROM Expense e GROUP BY e.category")
+    List<Map<String, Object>> getExpenseSummaryByCategory();
 }

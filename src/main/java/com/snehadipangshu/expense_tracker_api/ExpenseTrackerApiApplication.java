@@ -50,7 +50,7 @@ public class ExpenseTrackerApiApplication {
 		//     ↓
 		// Spring Boot starts
 		//     ↓
-		// Creates Spring Application Context
+		// Creates Spring Application Context/Spring IOC Container
 		//     ↓
 		// Reads application configuration
 		//     ↓
