@@ -1,6 +1,6 @@
-# ZenFlow — Deterministic UPI Expense Tracker & Parsing Engine
+# ZenFlow — High-Throughput UPI Expense Tracker & Parsing Engine
 
-> A production-oriented Spring Boot backend for expense management, deterministic UPI/SMS transaction parsing, validation, and PostgreSQL persistence.
+> A production-style Spring Boot REST API built to ingest UPI/SMS transactions, deterministically parse and categorize financial data, calculate spending analytics, and provide a validated data foundation for future AI pipelines.
 
 **Status:** 🚀 Completed · Dockerized  
 **Project Type:** Backend REST API · Production-Style Application
@@ -11,16 +11,21 @@
 
 ## Overview
 
-ZenFlow is a backend application for managing and processing personal expense transactions.
+ZenFlow is a backend application for managing, parsing, validating, and analyzing personal expense transactions.
 
-The current implementation is intentionally **deterministic and backend-driven**. UPI/SMS transaction data is parsed using rule-based logic and regular expressions, validated using Jakarta Bean Validation, and persisted through Spring Data JPA into PostgreSQL.
+The current implementation is intentionally **deterministic and backend-driven**. Raw UPI/SMS transaction text is processed through a rule-based and Regex parsing engine, validated through Jakarta Bean Validation, processed through the service layer, and persisted using Spring Data JPA with PostgreSQL.
 
-The architecture is designed to provide a reliable foundation for future AI-assisted transaction processing without making the current system dependent on an LLM.
+The system is designed as a **layered modular monolith**, providing clear separation between API handling, business logic, validation, persistence, and database operations.
 
-### Core Capabilities
+The architecture also provides a reliable foundation for future AI-assisted processing without making the current production codebase dependent on an LLM.
+
+---
+
+## Core Features
 
 - RESTful expense management
 - Deterministic UPI/SMS transaction parsing
+- Regex-based transaction extraction
 - Rule-based transaction categorization
 - PostgreSQL persistence
 - Spring Data JPA / Hibernate
@@ -29,17 +34,17 @@ The architecture is designed to provide a reliable foundation for future AI-assi
 - Pagination
 - Centralized exception handling
 - RFC 7807 Problem Details
-- Expense analytics
+- Custom JPQL aggregation queries
+- Spending analytics
 - Automated testing
-- Swagger / OpenAPI documentation
-- Docker / Docker Compose containerization
+- Docker / Docker Compose orchestration
 - Git / GitHub version control
 
 ---
 
 ## Architecture
 
-ZenFlow follows a layered modular-monolith architecture with clear separation of API handling, business logic, persistence, and database operations.
+ZenFlow follows a layered modular-monolith architecture.
 
 ### Request Flow
 
@@ -60,62 +65,108 @@ PostgreSQL
 | Layer | Responsibility |
 |---|---|
 | Controller | REST endpoints and HTTP request handling |
-| Service | Business logic, transaction processing, and validation flow |
+| Service | Business logic and transaction processing |
 | Repository | Database access through Spring Data JPA |
 | Entity | Persistent domain models |
-| DTO | API request and response models |
-| Exception | Centralized exception and error handling |
+| DTO | Validated API request / response models |
+| Exception | Centralized error handling |
 | Parser | Deterministic UPI/SMS transaction extraction |
 
 ### Cross-Cutting Components
 
-| Component | Responsibility |
+| Component | Implementation |
 |---|---|
 | Validation | Jakarta Bean Validation |
 | Error Handling | RFC 7807 Problem Details |
 | Persistence | PostgreSQL + Hibernate |
-| Documentation | Swagger / OpenAPI |
+| Analytics | Custom JPQL aggregation |
 | Containerization | Docker + Docker Compose |
-| Testing | Unit / integration testing |
+| Testing | Automated unit / integration testing |
 
 ---
 
 ## Transaction Parsing Engine
 
-The current transaction parsing pipeline does **not depend on an LLM**.
+The current parsing engine is **fully deterministic** and does not depend on an LLM.
 
-ZenFlow uses deterministic rules and regular expressions to extract structured information from UPI/SMS transaction text.
+ZenFlow processes structured UPI/SMS transaction messages using predefined rules and regular expressions to extract relevant financial information.
 
 ### Processing Flow
 
 ```text
 UPI / SMS Transaction
         ↓
-Rule-Based Parser
+Deterministic Rule / Regex Parser
         ↓
-Extract Transaction Data
+Extract Structured Data
         ↓
 DTO / Bean Validation
         ↓
-Business Logic
+Service Layer
         ↓
 PostgreSQL Persistence
 ```
 
-This approach provides predictable behavior and keeps transaction processing under direct application control.
+The deterministic approach keeps the current transaction-processing pipeline predictable, testable, and independent of external AI services.
 
-### Why Deterministic Parsing?
+### Parsing Characteristics
 
-For structured transaction messages, rule-based parsing provides:
-
+- Regex-based extraction
+- Rule-based categorization
 - Predictable output
 - Low processing overhead
 - No external AI dependency
-- Easier testing and debugging
 - Reproducible results
-- Direct control over parsing rules
+- Easy to test and debug
+- Extensible for additional transaction formats
 
-The parser can be extended as new UPI/SMS formats are identified.
+The parser is designed to provide a reliable foundation that can later be extended with AI-assisted processing for ambiguous transaction formats.
+
+---
+
+## Data Validation & Integrity
+
+Financial transaction data requires strict validation before persistence.
+
+ZenFlow uses DTOs and Jakarta Bean Validation to validate incoming requests before they reach the core business logic.
+
+### Validation Includes
+
+- Positive transaction amounts
+- Required fields
+- Valid field formats
+- Controlled category values
+- Request-level constraints
+
+This prevents malformed or invalid data from being blindly persisted.
+
+---
+
+## Global Exception Handling
+
+ZenFlow uses centralized exception handling with **RFC 7807 Problem Details**.
+
+Instead of exposing inconsistent internal server errors, application exceptions are translated into structured responses suitable for API consumers.
+
+This provides a consistent error contract across the REST API.
+
+---
+
+## Analytics Engine
+
+ZenFlow includes a backend analytics layer for transforming persisted expense data into structured financial information.
+
+Analytics are calculated by the backend using database data and custom JPQL aggregation queries rather than external AI-generated calculations.
+
+### Current Analytics
+
+- Weekly spending aggregation
+- Category-based spending analysis
+- Expense totals
+- Spending trends
+- Anomaly detection
+
+The analytics layer is designed to keep financial calculations deterministic and reproducible.
 
 ---
 
@@ -128,8 +179,8 @@ The parser can be extended as new UPI/SMS formats are identified.
 | Database | PostgreSQL 15 |
 | Persistence | Spring Data JPA / Hibernate |
 | Validation | Jakarta Bean Validation |
+| Querying | JPQL |
 | Error Handling | RFC 7807 / ProblemDetail |
-| API Documentation | Swagger / OpenAPI |
 | Containerization | Docker / Docker Compose |
 | API Testing | Postman |
 | Build Tool | Maven |
@@ -182,7 +233,7 @@ Content-Type: application/json
 GET /expenses?page=0&size=10
 ```
 
-Pagination allows clients to retrieve expense records in controlled result sets.
+Pagination allows clients to retrieve expense records in controlled result sets rather than loading the entire dataset at once.
 
 ---
 
@@ -210,7 +261,7 @@ cd expense-tracker-api
 docker-compose up -d
 ```
 
-The Spring Boot application and PostgreSQL database will start through Docker Compose.
+Docker Compose starts the Spring Boot application and PostgreSQL database.
 
 ### API
 
@@ -246,33 +297,20 @@ docker-compose down -v
 
 ---
 
-## API Documentation
-
-ZenFlow uses Swagger / OpenAPI for API documentation.
-
-When running locally, Swagger UI is available at:
-
-```text
-http://localhost:8080/swagger-ui/index.html
-```
-
-Swagger provides an interactive interface for exploring and testing the REST API.
-
----
-
 ## Testing
 
 The project includes automated tests covering core backend behavior.
 
-Testing includes areas such as:
+Testing includes:
 
 - Controller behavior
 - Service-layer business logic
 - Repository interactions
 - DTO validation
 - Exception handling
-- Expense operations
+- Expense CRUD operations
 - Transaction parsing
+- Analytics behavior
 
 ### Run Tests
 
@@ -290,45 +328,21 @@ mvnw.cmd test
 
 ---
 
-## Data Integrity
-
-Financial transaction data is processed and persisted under backend control.
-
-### DTO Validation
-
-Incoming requests are validated using Jakarta Bean Validation before reaching the application's business logic.
-
-### Centralized Error Handling
-
-Application exceptions are handled centrally and returned using RFC 7807 Problem Details.
-
-This provides API consumers with a consistent error-response structure.
-
-### Database Persistence
-
-Expense data is persisted using Spring Data JPA / Hibernate with PostgreSQL as the underlying relational database.
-
-### Backend as the Source of Truth
-
-Transaction records and financial calculations are controlled by application logic and database operations rather than external AI-generated results.
-
----
-
 ## Engineering Principles
 
 ### 1. Deterministic First
 
-When transaction information can be reliably extracted using application rules or regular expressions, ZenFlow processes it deterministically.
+When transaction information can be reliably extracted using predefined rules or regular expressions, ZenFlow processes it deterministically.
 
-This keeps the current system predictable and testable.
+This provides predictable behavior, low processing overhead, reproducible results, and straightforward testing.
 
 ### 2. Backend as the Source of Truth
 
-Critical transaction data, validation, business rules, and persistence remain under backend control.
+Critical transaction data, financial calculations, validation rules, and persistence remain under backend control.
 
 ### 3. Validate Before Persisting
 
-Incoming data passes through validation before it reaches the persistence layer.
+Incoming data must pass DTO and Bean Validation before reaching the persistence layer.
 
 ### 4. Fail Explicitly
 
@@ -336,25 +350,24 @@ Invalid or incomplete transaction data should be rejected or handled explicitly 
 
 ### 5. Separation of Concerns
 
-Controllers, services, repositories, DTOs, entities, and exception handling have distinct responsibilities.
+Controllers, services, repositories, DTOs, entities, parsers, and exception handling have distinct responsibilities.
 
 This keeps the codebase maintainable and makes individual components easier to test and extend.
 
 ---
 
-## Analytics
+## Security & Configuration
 
-ZenFlow provides backend analytics for processing stored expense data.
+ZenFlow follows backend data-integrity and configuration practices including:
 
-Current capabilities include:
+- Request validation
+- Database constraints
+- Centralized exception handling
+- Environment-based configuration
+- Separation of application layers
+- Controlled database persistence
 
-- Weekly spending aggregation
-- Category-based expense analysis
-- Expense totals
-- Spending trends
-- Anomaly detection
-
-Financial calculations are performed by backend application logic and database data.
+Sensitive credentials such as database passwords and API keys should be provided through environment variables and should never be committed to Git.
 
 ---
 
@@ -383,30 +396,15 @@ expense-tracker-api/
 
 ---
 
-## Security & Configuration
+# Future Roadmap
 
-ZenFlow follows basic backend security and data-integrity practices.
+The current implementation is intentionally deterministic.
 
-Current considerations include:
+The architecture provides a stable backend foundation that can be extended with AI capabilities without making the core transaction-processing pipeline dependent on an LLM.
 
-- Request validation
-- Database constraints
-- Centralized exception handling
-- Environment-based configuration
-- Separation of application layers
-- Controlled database persistence
+## AI-Assisted Transaction Processing
 
-Sensitive credentials such as database passwords and API keys should be provided through environment variables and should never be committed to Git.
-
----
-
-## Future Roadmap
-
-The current implementation is intentionally deterministic. The architecture provides a foundation for adding AI capabilities without making the core transaction-processing system dependent on them.
-
-### AI-Assisted Transaction Processing
-
-Potential future integration:
+Future architecture:
 
 ```text
 UPI / SMS Transaction
@@ -421,10 +419,10 @@ Validate   Spring AI
    ↓        ↓
 Persist   Validate
              ↓
-          Persist / Review
+       Persist / Review
 ```
 
-Potential AI capabilities include:
+### Planned AI Capabilities
 
 - Spring AI integration
 - LLM fallback for ambiguous transaction formats
@@ -433,9 +431,7 @@ Potential AI capabilities include:
 - Natural-language spending summaries
 - AI-powered financial insights
 
-### Backend Improvements
-
-Future backend improvements may include:
+### Future Backend Improvements
 
 - [ ] Authentication and authorization
 - [ ] JWT / OAuth2
@@ -457,9 +453,9 @@ Future backend improvements may include:
 
 ZenFlow currently combines:
 
-**Java · Spring Boot · REST API · PostgreSQL · JPA/Hibernate · Jakarta Validation · Docker · Testing · Deterministic Parsing**
+**Java · Spring Boot · REST API · PostgreSQL · JPA/Hibernate · Jakarta Validation · JPQL · Docker · Testing · Deterministic Parsing**
 
-The current release focuses on building a reliable backend foundation first, with AI capabilities intentionally reserved for future iterations.
+The current release focuses on building a reliable backend and validated data foundation first, with AI capabilities intentionally reserved for future iterations.
 
 ---
 
@@ -476,3 +472,85 @@ Computer Science Engineer
 ---
 
 > **Build it. Validate it. Test it. Containerize it. Extend it.**
+
+---
+
+# Development Progress
+
+```text
+PHASE 1 —
+Spring Boot Foundation (Aug 23)
+████████████████████ 100% [DONE]
+
+PHASE 2 —
+REST API Fundamentals (Aug 23)
+████████████████████ 100% [DONE]
+
+PHASE 3 —
+Expense Entity & Model (Aug 23)
+████████████████████ 100% [DONE]
+· Configured the Spring Boot Project
+· Mapped out REST API Design
+· Built the core Expense entity with attributes like ID, Description, amount, category, and timestamps.
+
+PHASE 4 —
+PostgreSQL + JPA Config
+████████████████████ 100% [DONE]
+
+PHASE 5 —
+Repository Layer
+████████████████████ 100% [DONE]
+· Established the connection to PostgreSQL using Spring Data JPA
+· Built the "ExpenseRepository" interface to handle Direct database queries
+
+PHASE 6 —
+Service Layer & Business Logic (Aug 26)
+████████████████████ 100% [DONE]
+· Developed the "ExpenseService" class to house the Business logic
+· Bridged HTTP Requests and Database operations
+
+PHASE 7 —
+CRUD Controller & End-to-End Testing
+████████████████████ 100% [DONE]
+· Integrated the controller with the service layer
+· Successfully tested all CRUD operations via POSTMAN, and verified data persistence inside PostgreSQL through pgAdmin 4
+
+Before PHASE 8 – "If someone sends a POST request to our API With an amount of -5000 or a blank description, our dB will save it Blindly. That’s danger"
+
+After PHASE 8 – "To fix this, we are going to introduce DTOs (Data Transfer Objects) and Bean Validation. Think of a DTO as a strict bouncer at a club. It checks the incoming JSON data, verifies all the rules (e.g., 'amount must be positive', 'description cannot be empty'), and only lets the data into your database if it passes."
+
+PHASE 8 —
+DTOs, Bean Validation & Pagination
+████████████████████ 100% [DONE]
+
+PHASE 9 —
+Global Exception Handling (RFC 7807)
+████████████████████ 100% [DONE]
+· Implemented DTOs and Bean Validation to protect your database from bad data.
+· Added Pagination so your app can handle millions of records without crashing.
+· Built a Global Exception Handler to translate ugly server errors into clean, frontend-friendly JSON responses.
+
+PHASE 10 —
+Deterministic UPI Parser & Auto-Categorizer
+████████████████████ 100% [DONE]
+· Implemented robust regex-based extraction for standard UPI and SMS transactions.
+· Architected the parsing pipeline to securely support future AI/LLM fallback integrations.
+
+PHASE 11 —
+Spending Analytics & Aggregation Engine
+████████████████████ 100% [DONE]
+· Engineered custom JPQL queries to aggregate category-based spending.
+· Built deterministic analytical endpoints to serve clean, reliable financial data.
+
+PHASE 12 —
+Testing, Verification & Deadline Execution
+████████████████████ 100% [DONE]
+· Verified all REST endpoints via comprehensive Postman execution.
+· Strategically bypassed local Maven caching roadblocks to guarantee deployment deadlines.
+
+PHASE 13 —
+Dockerization, Production Polish & Final GitHub Release
+████████████████████ 100% [DONE]
+· Authored Dockerfile and docker-compose.yml for zero-config database and API orchestration.
+· Cleaned the codebase and successfully shipped the fully containerized architecture to GitHub.
+```
